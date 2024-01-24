@@ -1,7 +1,7 @@
 import React from "react";
-import Track from "./Track";
+import Track from "../Track/Track";
 
-function Tracklist({ tracks, isRemoval, onSave, onRemove }) {
+function Tracklist({ tracks, isRemoval, operateMethod }) {
   return (
     <div className="track-list">
       {tracks.map((track) => {
@@ -10,8 +10,7 @@ function Tracklist({ tracks, isRemoval, onSave, onRemove }) {
             key={track.id}
             track={track}
             isRemoval={isRemoval}
-            onSave={onSave}
-            onRemove={onRemove}
+            operateMethod={operateMethod}
           />
         );
       })}
