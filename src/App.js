@@ -28,12 +28,33 @@ function App() {
     setSearchResults(results);
   };
 
+  const handlePlayListNameChange = (newName) => {
+    setPlaylistName(newName);
+  };
+
+  const playListRemoveTrack = (track) => {
+    const newTracks = playlistTracks.filter((t) => t.id !== track.id);
+    setPlaylistTracks(newTracks);
+  };
+  const playListSave = () => {
+    console.log("Saving the playlist to Spotify...");
+    console.log("Playlist Name:", playlistName);
+    console.log("Tracks:", playlistTracks);
+    // Here, you will later add the code to interact with the Spotify API
+  };
+
   return (
     <div>
       <NavBar />
       <SearchBar onSearch={handleSearch} />
       <SearchResults results={searchResults} />
-      <PlayList />
+      <PlayList
+        playlistName={playlistName}
+        savedTracks={playlistTracks}
+        onRemove={playListRemoveTrack}
+        onNameChange={handlePlayListNameChange}
+        onSave={playListSave}
+      />
     </div>
   );
 }

@@ -1,16 +1,17 @@
 import React from "react";
 import Track from "./Track";
 
-function Tracklist({ tracks }) {
+function Tracklist({ tracks, isRemoval, onSave, onRemove }) {
   return (
     <div className="track-list">
       {tracks.map((track) => {
         return (
           <Track
             key={track.id}
-            name={track.name}
-            artist={track.artist}
-            album={track.album}
+            track={track}
+            isRemoval={isRemoval}
+            onSave={onSave}
+            onRemove={onRemove}
           />
         );
       })}
