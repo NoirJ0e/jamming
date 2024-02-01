@@ -1,7 +1,7 @@
 import React from "react";
 import Track from "../Track/Track";
 
-function Tracklist({ tracks, isRemoval, operateMethod }) {
+function TrackList({ tracks, isRemoval, operateMethod }) {
   return (
     <div className="track-list">
       {tracks.map((track) => {
@@ -18,4 +18,4 @@ function Tracklist({ tracks, isRemoval, operateMethod }) {
   );
 }
 
-export default Tracklist;
+export default TrackList;

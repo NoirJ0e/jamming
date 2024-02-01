@@ -1,10 +1,10 @@
 import React from "react";
-import Tracklist from "../Tracklist/Tracklist";
+import TrackList from "../TrackList/TrackList";
 
 function SearchResults({ results, operateMethod }) {
   return (
     <section className="search-results">
-      <Tracklist
+      <TrackList
         tracks={results}
         isRemoval={false}
         operateMethod={operateMethod}

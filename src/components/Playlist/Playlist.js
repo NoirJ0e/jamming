@@ -1,5 +1,5 @@
 import React from "react";
-import Tracklist from "../Tracklist/Tracklist";
+import TrackList from "../TrackList/TrackList.js";
 
 function Playlist({
   playlistName,
@@ -15,12 +15,12 @@ function Playlist({
     <section className="playlist">
       <input
         value={playlistName}
-        defaultValue="New Playlist"
+        placeholder="New Playlist"
         onChange={handleNameChange}
         type="text"
       />
 
-      <Tracklist
+      <TrackList
         tracks={savedTracks}
         isRemoval={true}
         operateMethod={operateMethod}
