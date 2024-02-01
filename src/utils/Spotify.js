@@ -3,6 +3,7 @@ const Spotify = {
   REDIRECT_URL: "http://localhost:3000/callback",
   AUTH_ENDPOINT: "https://accounts.spotify.com/authorize",
   RESPONSE_TYPE: "token",
+  SCOPE: "playlist-modify-private playlist-modify-public",
 
   generateRandomString: (length) => {
     let result = "";
@@ -19,7 +20,11 @@ const Spotify = {
 
   redirectToSpotifyAuthorization: () => {
     const state = Spotify.generateRandomString(16);
-    const url = `${Spotify.AUTH_ENDPOINT}?response_type=${Spotify.RESPONSE_TYPE}&client_id=${Spotify.CLIENT_ID}&redirect_uri=${Spotify.REDIRECT_URL}&state=${state}`;
+    const url = `${Spotify.AUTH_ENDPOINT}?response_type=${
+      Spotify.RESPONSE_TYPE
+    }&client_id=${Spotify.CLIENT_ID}&redirect_uri=${
+      Spotify.REDIRECT_URL
+    }&state=${state}&scope=${encodeURI(Spotify.SCOPE)}`;
     window.location = url;
   },
 
@@ -46,6 +51,29 @@ const Spotify = {
     });
     const jsonResponse = await response.json();
     return jsonResponse.id;
+  },
+  createPlayList: async (userId, accessToken, playlistName) => {
+    try {
+      const response = await fetch(
+        `https://api.spotify.com/v1/users/${userId}/playlists`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: playlistName,
+            description: "Created from Jammming",
+            public: false,
+          }),
+        }
+      );
+      const jsonResponse = await response.json();
+      return jsonResponse.id;
+    } catch (e) {
+      console.log(e);
+    }
   },
 };
 

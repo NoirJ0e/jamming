@@ -54,7 +54,8 @@ function App() {
   const [playlistName, setPlaylistName] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [accessToken, setAccessToken] = useState(null);
-  const [userId, setUserId] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [playListId, setPlayListId] = useState(null);
 
   // Sign in for the access token and user id
   useEffect(() => {
@@ -62,9 +63,30 @@ function App() {
     if (token) {
       setAccessToken(token);
       // Store the user id to create a playlist later
-      setUserId(Spotify.getUserId(token));
+      setUserId(async () => {
+        try {
+          const userId = await Spotify.getUserId(token);
+          setUserId(userId);
+        } catch (error) {
+          console.log(error);
+        }
+      });
     }
   }, []);
+
+  // create a playlist
+  useEffect(() => {
+    console.log(
+      `useEffect: \naccessToken: ${accessToken}\nuserId: ${userId}\nplaylistName: ${playlistName}\nplaylistTracks length: ${playlistTracks.length}`
+    );
+    if (userId && playlistName && playlistTracks.length > 0) {
+      console.log("useEffect: create a playlist");
+      console.log("Creating a playlist...");
+      console.log("User ID:", userId);
+      console.log("Playlist Name:", playlistName);
+      console.log("Tracks:", playlistTracks);
+    }
+  }, [playlistTracks.length, playlistName]);
 
   const handleSearch = (keyword) => {
     const results = searchResults.filter(
@@ -89,11 +111,15 @@ function App() {
     const newTracks = [...playlistTracks, track];
     setPlaylistTracks(newTracks);
   };
+
   const playListSave = () => {
-    console.log("Saving the playlist to Spotify...");
-    console.log("Playlist Name:", playlistName);
-    console.log("Tracks:", playlistTracks);
-    // TODO: Add actual saving logic here
+    setPlayListId(async () => {
+      try {
+        Spotify.createPlayList(userId, accessToken, playlistName);
+      } catch (error) {
+        console.log(error);
+      }
+    });
   };
 
   return (
@@ -110,7 +136,6 @@ function App() {
       />
       Spotify auth test
       <button onClick={Spotify.redirectToSpotifyAuthorization}>Login</button>
-      {accessToken && <p>Access Token: {accessToken}</p>}
     </div>
   );
 }
