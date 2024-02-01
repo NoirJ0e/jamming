@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchBar from "./components/SearchBar/SearchBar.js";
 import Playlist from "./components/Playlist/Playlist.js";
 import NavBar from "./components/NavBar/NavBar.js";
 import SearchResults from "./components/SearchResults/SearchResults.js";
+import Spotify from "./utils/Spotify.js";
 
 const exampleSearchResults = [
   {
@@ -52,6 +53,18 @@ function App() {
   const [searchResults, setSearchResults] = useState(exampleSearchResults);
   const [playlistName, setPlaylistName] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState([]);
+  const [accessToken, setAccessToken] = useState(null);
+  const [userId, setUserId] = useState("");
+
+  // Sign in for the access token and user id
+  useEffect(() => {
+    const token = Spotify.getAccessToken();
+    if (token) {
+      setAccessToken(token);
+      // Store the user id to create a playlist later
+      setUserId(Spotify.getUserId(token));
+    }
+  }, []);
 
   const handleSearch = (keyword) => {
     const results = searchResults.filter(
@@ -95,6 +108,9 @@ function App() {
         onSave={playListSave}
         operateMethod={playListRemoveTrack}
       />
+      Spotify auth test
+      <button onClick={Spotify.redirectToSpotifyAuthorization}>Login</button>
+      {accessToken && <p>Access Token: {accessToken}</p>}
     </div>
   );
 }
