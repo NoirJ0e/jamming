@@ -1,54 +1,10 @@
 import React, { useEffect, useState } from "react";
-import SearchBar from "./components/SearchBar/SearchBar.js";
-import Playlist from "./components/Playlist/Playlist.js";
-import NavBar from "./components/NavBar/NavBar.js";
-import SearchResults from "./components/SearchResults/SearchResults.js";
+import SearchBar from "./components/SearchBar/SearchBar.jsx";
+import Playlist from "./components/Playlist/Playlist.jsx";
+import NavBar from "./components/NavBar/NavBar.jsx";
+import SearchResults from "./components/SearchResults/SearchResults.jsx";
 import Spotify from "./utils/Spotify.js";
 
-const exampleSearchResults = [
-  {
-    id: 1,
-    name: "Track 1",
-    artist: "Artist 1",
-    album: "Album 1",
-    uri: "spotify:track:5LRnfm4nmmfBEGgkrKrSQv",
-  },
-  {
-    id: 2,
-    name: "Track 2",
-    artist: "Artist 2",
-    album: "Album 2",
-    uri: "spotify:track:5LRnfm4nmmfBEGgkrKrKKv",
-  },
-  {
-    id: 3,
-    name: "Track 3",
-    artist: "Artist 3",
-    album: "Album 3",
-    uri: "spotify:track:5LRnfm4nmmfBEGgkrKriIv",
-  },
-  {
-    id: 4,
-    name: "Track 4",
-    artist: "Artist 4",
-    album: "Album 4",
-    uri: "spotify:track:5Liifm4nmmfBEGgkrKrSQv",
-  },
-  {
-    id: 5,
-    name: "Track 5",
-    artist: "Artist 5",
-    album: "Album 5",
-    uri: "spotify:track:5LRnapanmmfBEGgkrKrSQv",
-  },
-  {
-    id: 6,
-    name: "Track 6",
-    artist: "Artist 6",
-    album: "Album 6",
-    uri: "spotify:track:5LRnfmooomfBEGgkrKrSQv",
-  },
-];
 function App() {
   const [searchResults, setSearchResults] = useState([]);
   const [playlistName, setPlaylistName] = useState("");
@@ -77,24 +33,8 @@ function App() {
     }
   }, []);
 
-  // create a playlist
-  useEffect(() => {
-    console.log(
-      `useEffect: \naccessToken: ${accessToken}\nuserId: ${userId}\nplaylistName: ${playlistName}\nplaylistTracks length: ${playlistTracks.length}`
-    );
-    if (userId && playlistName && playlistTracks.length > 0) {
-      console.log("useEffect: create a playlist");
-      console.log("Creating a playlist...");
-      console.log("User ID:", userId);
-      console.log("Playlist Name:", playlistName);
-      console.log("Tracks:", playlistTracks);
-    }
-  }, [playlistTracks.length, playlistName]);
-
   const handleSearch = async (keyword) => {
     const searchResults = await Spotify.search(keyword, accessToken);
-
-    console.log(JSON.stringify(searchResults));
 
     const results = searchResults.filter(
       (track) =>
@@ -168,7 +108,7 @@ function App() {
   } else {
     return (
       <div>
-        <h2>Please login to use</h2>
+        <h2 className="">Please login to use</h2>
         <button onClick={Spotify.redirectToSpotifyAuthorization}>Login</button>
       </div>
     );

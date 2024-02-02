@@ -1,5 +1,5 @@
 import React from "react";
-import TrackList from "../TrackList/TrackList.js";
+import TrackList from "../TrackList/TrackList.jsx";
 
 function Playlist({
   playlistName,
