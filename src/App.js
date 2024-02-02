@@ -50,12 +50,14 @@ const exampleSearchResults = [
   },
 ];
 function App() {
-  const [searchResults, setSearchResults] = useState(exampleSearchResults);
+  const [searchResults, setSearchResults] = useState([]);
   const [playlistName, setPlaylistName] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [accessToken, setAccessToken] = useState(null);
   const [userId, setUserId] = useState(null);
   const [playListId, setPlayListId] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [savedTrackURIs, setSavedTrackURIs] = useState([]);
 
   // Sign in for the access token and user id
   useEffect(() => {
@@ -67,6 +69,7 @@ function App() {
         try {
           const userId = await Spotify.getUserId(token);
           setUserId(userId);
+          setLoggedIn(true);
         } catch (error) {
           console.log(error);
         }
@@ -88,7 +91,11 @@ function App() {
     }
   }, [playlistTracks.length, playlistName]);
 
-  const handleSearch = (keyword) => {
+  const handleSearch = async (keyword) => {
+    const searchResults = await Spotify.search(keyword, accessToken);
+
+    console.log(JSON.stringify(searchResults));
+
     const results = searchResults.filter(
       (track) =>
         track.name.toLowerCase().includes(keyword.toLowerCase()) ||
@@ -110,34 +117,62 @@ function App() {
   const playListAddTrack = (track) => {
     const newTracks = [...playlistTracks, track];
     setPlaylistTracks(newTracks);
+    const newTrackURIs = [...savedTrackURIs, track.uri];
+    setSavedTrackURIs(newTrackURIs);
   };
 
-  const playListSave = () => {
-    setPlayListId(async () => {
-      try {
-        Spotify.createPlayList(userId, accessToken, playlistName);
-      } catch (error) {
-        console.log(error);
+  const playListSave = async () => {
+    try {
+      // First, create the playlist and get the playlist ID
+      const newPlayListId = await Spotify.createPlayList(
+        userId,
+        accessToken,
+        playlistName
+      );
+
+      // Then, set the playlist ID in your state
+      setPlayListId(newPlayListId);
+
+      // Finally, add tracks to the playlist
+      // Make sure to check if newPlayListId is not null or undefined
+      if (newPlayListId) {
+        await Spotify.addToPlayList(
+          newPlayListId,
+          accessToken,
+          playlistTracks.map((track) => track.uri)
+        );
       }
-    });
+    } catch (error) {
+      console.error("Error in saving playlist:", error);
+    }
   };
 
-  return (
-    <div>
-      <NavBar />
-      <SearchBar onSearch={handleSearch} />
-      <SearchResults results={searchResults} operateMethod={playListAddTrack} />
-      <Playlist
-        playlistName={playlistName}
-        savedTracks={playlistTracks}
-        onNameChange={handlePlayListNameChange}
-        onSave={playListSave}
-        operateMethod={playListRemoveTrack}
-      />
-      Spotify auth test
-      <button onClick={Spotify.redirectToSpotifyAuthorization}>Login</button>
-    </div>
-  );
+  if (loggedIn) {
+    return (
+      <div>
+        <NavBar />
+        <SearchBar onSearch={handleSearch} />
+        <SearchResults
+          results={searchResults}
+          operateMethod={playListAddTrack}
+        />
+        <Playlist
+          playlistName={playlistName}
+          savedTracks={playlistTracks}
+          onNameChange={handlePlayListNameChange}
+          onSave={playListSave}
+          operateMethod={playListRemoveTrack}
+        />
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <h2>Please login to use</h2>
+        <button onClick={Spotify.redirectToSpotifyAuthorization}>Login</button>
+      </div>
+    );
+  }
 }
 
 export default App;
