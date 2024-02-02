@@ -3,6 +3,8 @@ import SearchBar from "./components/SearchBar/SearchBar.jsx";
 import Playlist from "./components/Playlist/Playlist.jsx";
 import NavBar from "./components/NavBar/NavBar.jsx";
 import SearchResults from "./components/SearchResults/SearchResults.jsx";
+import BeforeLogin from "./components/BeforeLogin/BeforeLogin.jsx";
+import AfterLogin from "./components/AfterLogin/AfterLogin.jsx";
 import Spotify from "./utils/Spotify.js";
 
 function App() {
@@ -87,32 +89,25 @@ function App() {
     }
   };
 
-  if (loggedIn) {
-    return (
-      <div>
-        <NavBar />
-        <SearchBar onSearch={handleSearch} />
-        <SearchResults
-          results={searchResults}
-          operateMethod={playListAddTrack}
-        />
-        <Playlist
+  return (
+    <div>
+      <NavBar />
+      {loggedIn ? (
+        <AfterLogin
+          handleSearch={handleSearch}
+          searchResults={searchResults}
+          playListAddTrack={playListAddTrack}
           playlistName={playlistName}
-          savedTracks={playlistTracks}
-          onNameChange={handlePlayListNameChange}
-          onSave={playListSave}
-          operateMethod={playListRemoveTrack}
+          playlistTracks={playlistTracks}
+          handlePlayListNameChange={handlePlayListNameChange}
+          playListSave={playListSave}
+          playListRemoveTrack={playListRemoveTrack}
         />
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <h2 className="">Please login to use</h2>
-        <button onClick={Spotify.redirectToSpotifyAuthorization}>Login</button>
-      </div>
-    );
-  }
+      ) : (
+        <BeforeLogin />
+      )}
+    </div>
+  );
 }
 
 export default App;
