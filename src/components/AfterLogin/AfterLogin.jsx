@@ -16,14 +16,18 @@ function AfterLogin({
   return (
     <div>
       <SearchBar onSearch={handleSearch} />
-      <SearchResults results={searchResults} operateMethod={playListAddTrack} />
-      <Playlist
-        playlistName={playlistName}
-        savedTracks={playlistTracks}
-        onNameChange={handlePlayListNameChange}
-        onSave={playListSave}
-        operateMethod={playListRemoveTrack}
-      />
+      <div className="flex justify-between">
+        <SearchResults results={searchResults} operateMethod={playListAddTrack} />
+        <div className="box-border">
+          <Playlist
+            playlistName={playlistName}
+            savedTracks={playlistTracks}
+            onNameChange={handlePlayListNameChange}
+            onSave={playListSave}
+            operateMethod={playListRemoveTrack}
+          />
+        </div>
+      </div>
     </div>
   );
 }

@@ -88,6 +88,21 @@ function App() {
       console.error("Error in saving playlist:", error);
     }
   };
+  // return (
+  //   <div>
+  //     <NavBar />
+  //     <AfterLogin
+  //       handleSearch={handleSearch}
+  //       searchResults={searchResults}
+  //       playListAddTrack={playListAddTrack}
+  //       playlistName={playlistName}
+  //       playlistTracks={playlistTracks}
+  //       handlePlayListNameChange={handlePlayListNameChange}
+  //       playListSave={playListSave}
+  //       playListRemoveTrack={playListRemoveTrack}
+  //     />
+  //   </div>
+  // )
 
   return (
     <div>
